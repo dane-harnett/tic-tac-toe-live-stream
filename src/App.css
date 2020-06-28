@@ -6,9 +6,13 @@
 }
 
 .cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-basis: 33%;
   height: 100px;
   box-sizing: border-box;
+  font-size: 48px;
 }
 
 .cell.row0 {
