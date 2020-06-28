@@ -17,6 +17,8 @@ function App() {
         <div id="cell-2-1" className="cell row2 col1"></div>
         <div id="cell-2-2" className="cell row2 col2"></div>
       </div>
+      <div id="player1">> Player 1</div>
+      <div id="player2">Player 2</div>
     </div>
   );
 }

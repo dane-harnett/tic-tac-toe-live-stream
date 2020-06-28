@@ -9,16 +9,33 @@ When("the game has loaded", () => {
 });
 
 Then("I see a blank game board", () => {
-  cy.get("#game-board").find("#cell-0-0").should("have.text", "");
+  cy.get("#game").within(($game) => {
+    cy.get("#game-board").within(($gameBoard) => {
+      cy.get("#cell-0-0").should("have.text", "");
+      cy.get("#cell-0-1").should("have.text", "");
+      cy.get("#cell-0-2").should("have.text", "");
 
-  cy.get("#game-board").find("#cell-0-1").should("have.text", "");
-  cy.get("#game-board").find("#cell-0-2").should("have.text", "");
+      cy.get("#cell-1-0").should("have.text", "");
+      cy.get("#cell-1-1").should("have.text", "");
+      cy.get("#cell-1-2").should("have.text", "");
 
-  cy.get("#game-board").find("#cell-1-0").should("have.text", "");
-  cy.get("#game-board").find("#cell-1-1").should("have.text", "");
-  cy.get("#game-board").find("#cell-1-2").should("have.text", "");
+      cy.get("#cell-2-0").should("have.text", "");
+      cy.get("#cell-2-1").should("have.text", "");
+      cy.get("#cell-2-2").should("have.text", "");
+    });
+  });
+});
 
-  cy.get("#game-board").find("#cell-2-0").should("have.text", "");
-  cy.get("#game-board").find("#cell-2-1").should("have.text", "");
-  cy.get("#game-board").find("#cell-2-2").should("have.text", "");
+Then('I see that there are "2" players', () => {
+  cy.get("#game").within(($game) => {
+    cy.get("#player1").should("contain", "Player 1");
+    cy.get("#player2").should("contain", "Player 2");
+  });
+});
+
+Then('I see that it is "Player 1" turn', () => {
+  cy.get("#game").within(($game) => {
+    cy.get("#player1").should("have.text", "> Player 1");
+    cy.get("#player2").should("have.text", "Player 2");
+  });
 });
