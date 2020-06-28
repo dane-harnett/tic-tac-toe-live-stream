@@ -50,3 +50,10 @@ Then('I see that it is "Player 2" turn', () => {
 When(/"(.*)" plays their turn as "(.*):(.*)"/, (player, row, col) => {
   cy.get(`#cell-${row}-${col}`).click();
 });
+
+When(/I see that "(.*)" has claimed "(.*):(.*)"/, (player, row, col) => {
+  cy.get(`#cell-${row}-${col}`).should(
+    "have.text",
+    player === "Player 1" ? "0" : "X"
+  );
+});
