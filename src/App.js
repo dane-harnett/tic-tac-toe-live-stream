@@ -1,51 +1,7 @@
 import React from "react";
 import { useMachine } from "@xstate/react";
-import { assign, Machine } from "xstate";
+import gameMachine from "./xstate/gameMachine";
 import "./App.css";
-
-const gameMachine = Machine({
-  id: "game",
-  initial: "player1",
-  context: {
-    gameBoard: [
-      ["", "", ""],
-      ["", "", ""],
-      ["", "", ""],
-    ],
-  },
-  states: {
-    player1: {
-      on: {
-        PLAY: {
-          actions: assign({
-            gameBoard: (context, event) => {
-              const newGameBoard = [...context.gameBoard];
-              newGameBoard[event.row][event.col] = "0";
-              return newGameBoard;
-            },
-          }),
-          target: "player2",
-        },
-      },
-    },
-    player2: {
-      on: {
-        PLAY: {
-          actions: assign({
-            gameBoard: (context, event) => {
-              const newGameBoard = [...context.gameBoard];
-              newGameBoard[event.row][event.col] = "X";
-              return newGameBoard;
-            },
-          }),
-          target: "player1",
-        },
-      },
-    },
-    winner: {},
-    tie: {},
-  },
-});
 
 function App() {
   const [state, send] = useMachine(gameMachine);
@@ -56,7 +12,9 @@ function App() {
           id="cell-0-0"
           className="cell row0 col0"
           onClick={() => send("PLAY", { row: 0, col: 0 })}
-        >{state.context.gameBoard[0][0]}</div>
+        >
+          {state.context.gameBoard[0][0]}
+        </div>
         <div
           id="cell-0-1"
           className="cell row0 col1"
