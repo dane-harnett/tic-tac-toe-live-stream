@@ -14,15 +14,20 @@ const gameMachine = Machine(
     states: {
       player1: {
         on: {
-          PLAY: {
-            actions: "player1Turn",
-            target: "player2",
-          },
+          PLAY: [
+            {
+              cond: "moveIsValid",
+              actions: "player1Turn",
+              target: "player2",
+            },
+          ],
         },
       },
+      play: {},
       player2: {
         on: {
           PLAY: {
+            cond: "moveIsValid",
             actions: "player2Turn",
             target: "player1",
           },
@@ -48,6 +53,9 @@ const gameMachine = Machine(
           return newGameBoard;
         },
       }),
+    },
+    guards: {
+      moveIsValid: ({ gameBoard }, { row, col }) => gameBoard[row][col] === "",
     },
   }
 );
