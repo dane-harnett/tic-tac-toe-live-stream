@@ -6,13 +6,20 @@
 }
 
 .cell {
-  display: flex;
   align-items: center;
-  justify-content: center;
-  flex-basis: 33%;
-  height: 100px;
   box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  flex-basis: 33%;
   font-size: 48px;
+  height: 100px;
+  justify-content: center;
+}
+.cell[data-taken="false"]:hover {
+  background-color: rgba(60, 179, 113, 0.2);
+}
+.cell[data-taken="true"] {
+  cursor: default;
 }
 
 .cell.row0 {
