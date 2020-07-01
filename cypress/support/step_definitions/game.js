@@ -1,5 +1,7 @@
 import { Given } from "cypress-cucumber-preprocessor/steps";
 
+import playerMarkers from "../../../src/constants/playerMarkers";
+
 Given("I start a new game", () => {
   cy.visit("/");
 });
@@ -54,6 +56,6 @@ When(/"(.*)" plays their turn as "(.*):(.*)"/, (player, row, col) => {
 When(/I see that "(.*)" has claimed "(.*):(.*)"/, (player, row, col) => {
   cy.get(`#cell-${row}-${col}`).should(
     "have.text",
-    player === "Player 1" ? "0" : "X"
+    player === "Player 1" ? playerMarkers[0] : playerMarkers[1]
   );
 });

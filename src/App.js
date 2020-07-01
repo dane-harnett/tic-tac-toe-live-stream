@@ -14,6 +14,7 @@ function App() {
               <div
                 id={`cell-${rowIndex}-${colIndex}`}
                 className={`cell row${rowIndex} col${colIndex}`}
+                data-taken={state.context.gameBoard[rowIndex][colIndex] !== ""}
                 onClick={() => send("PLAY", { row: rowIndex, col: colIndex })}
               >
                 {state.context.gameBoard[rowIndex][colIndex]}

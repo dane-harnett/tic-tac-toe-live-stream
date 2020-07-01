@@ -1,4 +1,5 @@
 import { assign, Machine } from "xstate";
+import playerMarkers from "../constants/playerMarkers";
 
 const gameMachine = Machine(
   {
@@ -42,14 +43,14 @@ const gameMachine = Machine(
       player1Turn: assign({
         gameBoard: (context, event) => {
           const newGameBoard = [...context.gameBoard];
-          newGameBoard[event.row][event.col] = "0";
+          newGameBoard[event.row][event.col] = playerMarkers[0];
           return newGameBoard;
         },
       }),
       player2Turn: assign({
         gameBoard: (context, event) => {
           const newGameBoard = [...context.gameBoard];
-          newGameBoard[event.row][event.col] = "X";
+          newGameBoard[event.row][event.col] = playerMarkers[1];
           return newGameBoard;
         },
       }),
