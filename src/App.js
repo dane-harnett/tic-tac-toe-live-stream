@@ -30,6 +30,9 @@ function App() {
       <div id="player2">
         {state.context.currentPlayer === playerMarkers[1] && "> "}Player 2
       </div>
+      {state.matches("winner") && (
+        <div id="winner">{state.context.currentPlayer} has won the game</div>
+      )}
     </div>
   );
 }

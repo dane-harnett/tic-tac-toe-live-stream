@@ -59,3 +59,8 @@ When(/I see that "(.*)" has claimed "(.*):(.*)"/, (player, row, col) => {
     player === "Player 1" ? playerMarkers[0] : playerMarkers[1]
   );
 });
+
+Then(/I see that "(.*)" has won the game/, (player) => {
+  const winner = player === "Player 1" ? playerMarkers[0] : playerMarkers[1];
+  cy.get(`#winner`).should("have.text", `${winner} has won the game`);
+});
