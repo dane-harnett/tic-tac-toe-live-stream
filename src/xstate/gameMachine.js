@@ -4,8 +4,9 @@ import playerMarkers from "../constants/playerMarkers";
 const gameMachine = Machine(
   {
     id: "game",
-    initial: "player1",
+    initial: "ready",
     context: {
+      currentPlayer: playerMarkers[0],
       gameBoard: [
         ["", "", ""],
         ["", "", ""],
@@ -13,25 +14,20 @@ const gameMachine = Machine(
       ],
     },
     states: {
-      player1: {
+      ready: {
         on: {
           PLAY: [
             {
               cond: "moveIsValid",
-              actions: "player1Turn",
-              target: "player2",
+              actions: "playerTurn",
+              target: "checkWinner",
             },
           ],
         },
       },
-      play: {},
-      player2: {
+      checkWinner: {
         on: {
-          PLAY: {
-            cond: "moveIsValid",
-            actions: "player2Turn",
-            target: "player1",
-          },
+          "": "ready",
         },
       },
       winner: {},
@@ -40,19 +36,16 @@ const gameMachine = Machine(
   },
   {
     actions: {
-      player1Turn: assign({
-        gameBoard: (context, event) => {
-          const newGameBoard = [...context.gameBoard];
-          newGameBoard[event.row][event.col] = playerMarkers[0];
+      playerTurn: assign({
+        gameBoard: ({ gameBoard, currentPlayer }, event) => {
+          const newGameBoard = [...gameBoard];
+          newGameBoard[event.row][event.col] = currentPlayer;
           return newGameBoard;
         },
-      }),
-      player2Turn: assign({
-        gameBoard: (context, event) => {
-          const newGameBoard = [...context.gameBoard];
-          newGameBoard[event.row][event.col] = playerMarkers[1];
-          return newGameBoard;
-        },
+        currentPlayer: ({ currentPlayer }) =>
+          currentPlayer === playerMarkers[0]
+            ? playerMarkers[1]
+            : playerMarkers[0],
       }),
     },
     guards: {
