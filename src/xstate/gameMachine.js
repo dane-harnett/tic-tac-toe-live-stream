@@ -1,11 +1,14 @@
 import { assign, Machine } from "xstate";
 import playerMarkers from "../constants/playerMarkers";
 
+const isWinner = (a, b, c) => a !== "" && a === b && a === c;
+
 const gameMachine = Machine(
   {
     id: "game",
-    initial: "player1",
+    initial: "ready",
     context: {
+      currentPlayer: playerMarkers[0],
       gameBoard: [
         ["", "", ""],
         ["", "", ""],
@@ -13,25 +16,29 @@ const gameMachine = Machine(
       ],
     },
     states: {
-      player1: {
+      ready: {
         on: {
           PLAY: [
             {
               cond: "moveIsValid",
-              actions: "player1Turn",
-              target: "player2",
+              actions: "updateBoard",
+              target: "checkWinner",
             },
           ],
         },
       },
-      play: {},
-      player2: {
+      checkWinner: {
         on: {
-          PLAY: {
-            cond: "moveIsValid",
-            actions: "player2Turn",
-            target: "player1",
-          },
+          "": [
+            {
+              cond: "checkWinner",
+              target: "winner",
+            },
+            {
+              actions: "nextPlayer",
+              target: "ready",
+            },
+          ],
         },
       },
       winner: {},
@@ -40,23 +47,40 @@ const gameMachine = Machine(
   },
   {
     actions: {
-      player1Turn: assign({
-        gameBoard: (context, event) => {
-          const newGameBoard = [...context.gameBoard];
-          newGameBoard[event.row][event.col] = playerMarkers[0];
+      updateBoard: assign({
+        gameBoard: ({ gameBoard, currentPlayer }, event) => {
+          const newGameBoard = [...gameBoard];
+          newGameBoard[event.row][event.col] = currentPlayer;
           return newGameBoard;
         },
       }),
-      player2Turn: assign({
-        gameBoard: (context, event) => {
-          const newGameBoard = [...context.gameBoard];
-          newGameBoard[event.row][event.col] = playerMarkers[1];
-          return newGameBoard;
-        },
+      nextPlayer: assign({
+        currentPlayer: ({ currentPlayer }) =>
+          currentPlayer === playerMarkers[0]
+            ? playerMarkers[1]
+            : playerMarkers[0],
       }),
     },
     guards: {
       moveIsValid: ({ gameBoard }, { row, col }) => gameBoard[row][col] === "",
+      checkWinner: ({ gameBoard }) => {
+        if (
+          // columns
+          isWinner(gameBoard[0][0], gameBoard[1][0], gameBoard[2][0]) ||
+          isWinner(gameBoard[0][1], gameBoard[1][1], gameBoard[2][1]) ||
+          isWinner(gameBoard[0][2], gameBoard[1][2], gameBoard[2][2]) ||
+          // rows
+          isWinner(gameBoard[0][0], gameBoard[0][1], gameBoard[0][2]) ||
+          isWinner(gameBoard[1][0], gameBoard[1][1], gameBoard[1][2]) ||
+          isWinner(gameBoard[2][0], gameBoard[2][1], gameBoard[2][2]) ||
+          // diagonals
+          isWinner(gameBoard[0][0], gameBoard[1][1], gameBoard[2][2]) ||
+          isWinner(gameBoard[0][2], gameBoard[1][1], gameBoard[2][0])
+        ) {
+          return true;
+        }
+        return false;
+      },
     },
   }
 );

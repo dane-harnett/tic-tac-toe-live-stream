@@ -1,6 +1,7 @@
 import React from "react";
 import { useMachine } from "@xstate/react";
 import gameMachine from "./xstate/gameMachine";
+import playerMarkers from "./constants/playerMarkers";
 import "./App.css";
 
 function App() {
@@ -23,8 +24,15 @@ function App() {
           });
         })}
       </div>
-      <div id="player1">{state.matches("player1") && "> "}Player 1</div>
-      <div id="player2">{state.matches("player2") && "> "}Player 2</div>
+      <div id="player1">
+        {state.context.currentPlayer === playerMarkers[0] && "> "}Player 1
+      </div>
+      <div id="player2">
+        {state.context.currentPlayer === playerMarkers[1] && "> "}Player 2
+      </div>
+      {state.matches("winner") && (
+        <div id="winner">{state.context.currentPlayer} has won the game</div>
+      )}
     </div>
   );
 }
