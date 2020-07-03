@@ -1,19 +1,15 @@
 import { assign, Machine } from "xstate";
 import playerMarkers from "../constants/playerMarkers";
+import ticTacToe from "../games/ticTacToe";
 
-const isWinner = (a, b, c) => a !== "" && a === b && a === c;
+const currentGame = ticTacToe;
 
 const gameMachine = Machine(
   {
     id: "game",
     initial: "ready",
     context: {
-      currentPlayer: playerMarkers[0],
-      gameBoard: [
-        ["", "", ""],
-        ["", "", ""],
-        ["", "", ""],
-      ],
+      ...currentGame.initialGameState,
     },
     states: {
       ready: {
@@ -22,17 +18,21 @@ const gameMachine = Machine(
             {
               cond: "moveIsValid",
               actions: "updateBoard",
-              target: "checkWinner",
+              target: "checkEndGame",
             },
           ],
         },
       },
-      checkWinner: {
+      checkEndGame: {
         on: {
           "": [
             {
               cond: "checkWinner",
               target: "winner",
+            },
+            {
+              cond: "noRemainingValidMoves",
+              target: "tie",
             },
             {
               actions: "nextPlayer",
@@ -44,15 +44,18 @@ const gameMachine = Machine(
       winner: {},
       tie: {},
     },
+    on: {
+      START_NEW_GAME: {
+        actions: "startNewGame",
+        target: "ready",
+      },
+    },
   },
   {
     actions: {
+      startNewGame: assign(currentGame.initialGameState),
       updateBoard: assign({
-        gameBoard: ({ gameBoard, currentPlayer }, event) => {
-          const newGameBoard = [...gameBoard];
-          newGameBoard[event.row][event.col] = currentPlayer;
-          return newGameBoard;
-        },
+        gameBoard: currentGame.updateGameBoard,
       }),
       nextPlayer: assign({
         currentPlayer: ({ currentPlayer }) =>
@@ -63,24 +66,9 @@ const gameMachine = Machine(
     },
     guards: {
       moveIsValid: ({ gameBoard }, { row, col }) => gameBoard[row][col] === "",
-      checkWinner: ({ gameBoard }) => {
-        if (
-          // columns
-          isWinner(gameBoard[0][0], gameBoard[1][0], gameBoard[2][0]) ||
-          isWinner(gameBoard[0][1], gameBoard[1][1], gameBoard[2][1]) ||
-          isWinner(gameBoard[0][2], gameBoard[1][2], gameBoard[2][2]) ||
-          // rows
-          isWinner(gameBoard[0][0], gameBoard[0][1], gameBoard[0][2]) ||
-          isWinner(gameBoard[1][0], gameBoard[1][1], gameBoard[1][2]) ||
-          isWinner(gameBoard[2][0], gameBoard[2][1], gameBoard[2][2]) ||
-          // diagonals
-          isWinner(gameBoard[0][0], gameBoard[1][1], gameBoard[2][2]) ||
-          isWinner(gameBoard[0][2], gameBoard[1][1], gameBoard[2][0])
-        ) {
-          return true;
-        }
-        return false;
-      },
+      checkWinner: currentGame.checkWinner,
+      noRemainingValidMoves: ({ gameBoard }) =>
+        !gameBoard.some((row) => row.some((cell) => cell === "")),
     },
   }
 );

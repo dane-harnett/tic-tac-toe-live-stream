@@ -17,6 +17,7 @@ function App() {
                 className={`cell row${rowIndex} col${colIndex}`}
                 data-taken={state.context.gameBoard[rowIndex][colIndex] !== ""}
                 onClick={() => send("PLAY", { row: rowIndex, col: colIndex })}
+                style={{ flexBasis: `${100 / row.length}%` }}
               >
                 {state.context.gameBoard[rowIndex][colIndex]}
               </div>
@@ -33,6 +34,14 @@ function App() {
       {state.matches("winner") && (
         <div id="winner">{state.context.currentPlayer} has won the game</div>
       )}
+      {state.matches("tie") && <div id="tie">The game has ended in a tie</div>}
+      <button
+        id="start-new-game"
+        type="button"
+        onClick={() => send("START_NEW_GAME")}
+      >
+        Start new game
+      </button>
     </div>
   );
 }

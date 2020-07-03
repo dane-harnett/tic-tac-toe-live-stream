@@ -2,12 +2,16 @@ import { Given } from "cypress-cucumber-preprocessor/steps";
 
 import playerMarkers from "../../../src/constants/playerMarkers";
 
-Given("I start a new game", () => {
+Given("I load the game", () => {
   cy.visit("/");
 });
 
 When("the game has loaded", () => {
   cy.get("#game");
+});
+
+When("I start a new game", () => {
+  cy.get("#start-new-game").click();
 });
 
 Then("I see a blank game board", () => {
@@ -63,4 +67,8 @@ When(/I see that "(.*)" has claimed "(.*):(.*)"/, (player, row, col) => {
 Then(/I see that "(.*)" has won the game/, (player) => {
   const winner = player === "Player 1" ? playerMarkers[0] : playerMarkers[1];
   cy.get(`#winner`).should("have.text", `${winner} has won the game`);
+});
+
+Then(/I see that the game has ended in a tie/, () => {
+  cy.get(`#tie`).should("have.text", `The game has ended in a tie`);
 });

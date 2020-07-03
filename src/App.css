@@ -1,16 +1,16 @@
 
 .game-board {
   display: flex;
-  width: 300px;
+  width: 600px;
   flex-wrap: wrap;
 }
 
 .cell {
   align-items: center;
+  border: 2px solid mediumseagreen;
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
-  flex-basis: 33%;
   font-size: 48px;
   height: 100px;
   justify-content: center;
@@ -20,21 +20,4 @@
 }
 .cell[data-taken="true"] {
   cursor: default;
-}
-
-.cell.row0 {
-  border-bottom: 2px solid mediumseagreen;
-}
-
-.cell.row2 {
-  border-top: 2px solid mediumseagreen;
-}
-
-
-.cell.col0 {
-  border-right: 2px solid mediumseagreen;
-}
-
-.cell.col2 {
-  border-left: 2px solid mediumseagreen;
 }
