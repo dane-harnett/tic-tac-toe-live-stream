@@ -2,21 +2,14 @@ import { assign, Machine } from "xstate";
 import playerMarkers from "../constants/playerMarkers";
 import ticTacToe from "../games/ticTacToe";
 
-const initialGameState = {
-  currentPlayer: playerMarkers[0],
-  gameBoard: [
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
-  ],
-};
+const currentGame = ticTacToe;
 
 const gameMachine = Machine(
   {
     id: "game",
     initial: "ready",
     context: {
-      ...initialGameState,
+      ...currentGame.initialGameState,
     },
     states: {
       ready: {
@@ -60,17 +53,9 @@ const gameMachine = Machine(
   },
   {
     actions: {
-      startNewGame: assign(initialGameState),
+      startNewGame: assign(currentGame.initialGameState),
       updateBoard: assign({
-        gameBoard: ({ gameBoard, currentPlayer }, event) => {
-          return gameBoard.map((row, rowIndex) =>
-            event.row === rowIndex
-              ? row.map((col, colIndex) =>
-                  event.col === colIndex ? currentPlayer : col
-                )
-              : row
-          );
-        },
+        gameBoard: currentGame.updateGameBoard,
       }),
       nextPlayer: assign({
         currentPlayer: ({ currentPlayer }) =>
@@ -81,7 +66,7 @@ const gameMachine = Machine(
     },
     guards: {
       moveIsValid: ({ gameBoard }, { row, col }) => gameBoard[row][col] === "",
-      checkWinner: ticTacToe,
+      checkWinner: currentGame.checkWinner,
       noRemainingValidMoves: ({ gameBoard }) =>
         !gameBoard.some((row) => row.some((cell) => cell === "")),
     },

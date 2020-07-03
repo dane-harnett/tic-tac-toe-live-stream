@@ -17,6 +17,7 @@ function App() {
                 className={`cell row${rowIndex} col${colIndex}`}
                 data-taken={state.context.gameBoard[rowIndex][colIndex] !== ""}
                 onClick={() => send("PLAY", { row: rowIndex, col: colIndex })}
+                style={{ flexBasis: `${100 / row.length}%` }}
               >
                 {state.context.gameBoard[rowIndex][colIndex]}
               </div>

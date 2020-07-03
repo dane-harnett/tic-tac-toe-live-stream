@@ -1,6 +1,27 @@
+import playerMarkers from "../constants/playerMarkers";
+
+export const initialGameState = {
+  currentPlayer: playerMarkers[0],
+  gameBoard: [
+    ["", "", ""],
+    ["", "", ""],
+    ["", "", ""],
+  ],
+};
+
+export const updateGameBoard = ({ gameBoard, currentPlayer }, event) => {
+  return gameBoard.map((row, rowIndex) =>
+    event.row === rowIndex
+      ? row.map((col, colIndex) =>
+          event.col === colIndex ? currentPlayer : col
+        )
+      : row
+  );
+};
+
 const isWinner = (a, b, c) => a !== "" && a === b && a === c;
 
-const ticTacToe = ({ gameBoard }) => {
+export const checkWinner = ({ gameBoard }) => {
   if (
     // columns
     isWinner(gameBoard[0][0], gameBoard[1][0], gameBoard[2][0]) ||
@@ -19,4 +40,9 @@ const ticTacToe = ({ gameBoard }) => {
 
   return false;
 };
-export default ticTacToe;
+
+export default {
+  initialGameState,
+  updateGameBoard,
+  checkWinner,
+};

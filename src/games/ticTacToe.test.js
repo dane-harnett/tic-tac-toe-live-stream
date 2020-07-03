@@ -1,6 +1,6 @@
-import ticTacToe from "./ticTacToe";
+import { checkWinner } from "./ticTacToe";
 
-describe("Tic-tac-toe", () => {
+describe("checkWinner", () => {
   describe("determines winner", () => {
     it("by rows", () => {
       const firstRow = [
@@ -8,19 +8,19 @@ describe("Tic-tac-toe", () => {
         ["", "", ""],
         ["", "", ""],
       ];
-      expect(ticTacToe({ gameBoard: firstRow })).toBe(true);
+      expect(checkWinner({ gameBoard: firstRow })).toBe(true);
       const secondRow = [
         ["", "", ""],
         ["O", "O", "O"],
         ["", "", ""],
       ];
-      expect(ticTacToe({ gameBoard: secondRow })).toBe(true);
+      expect(checkWinner({ gameBoard: secondRow })).toBe(true);
       const thirdRow = [
         ["", "", ""],
         ["", "", ""],
         ["O", "O", "O"],
       ];
-      expect(ticTacToe({ gameBoard: thirdRow })).toBe(true);
+      expect(checkWinner({ gameBoard: thirdRow })).toBe(true);
     });
 
     it("by columns", () => {
@@ -29,19 +29,19 @@ describe("Tic-tac-toe", () => {
         ["O", "", ""],
         ["O", "", ""],
       ];
-      expect(ticTacToe({ gameBoard: firstCol })).toBe(true);
+      expect(checkWinner({ gameBoard: firstCol })).toBe(true);
       const secondCol = [
         ["", "O", ""],
         ["", "O", ""],
         ["", "O", ""],
       ];
-      expect(ticTacToe({ gameBoard: secondCol })).toBe(true);
+      expect(checkWinner({ gameBoard: secondCol })).toBe(true);
       const thirdCol = [
         ["", "", "O"],
         ["", "", "O"],
         ["", "", "O"],
       ];
-      expect(ticTacToe({ gameBoard: thirdCol })).toBe(true);
+      expect(checkWinner({ gameBoard: thirdCol })).toBe(true);
     });
 
     it("by diagonals", () => {
@@ -50,13 +50,13 @@ describe("Tic-tac-toe", () => {
         ["", "O", ""],
         ["", "", "O"],
       ];
-      expect(ticTacToe({ gameBoard: firstDiag })).toBe(true);
+      expect(checkWinner({ gameBoard: firstDiag })).toBe(true);
       const secondDiag = [
         ["", "", "O"],
         ["", "O", ""],
         ["O", "", ""],
       ];
-      expect(ticTacToe({ gameBoard: secondDiag })).toBe(true);
+      expect(checkWinner({ gameBoard: secondDiag })).toBe(true);
     });
   });
   describe("determines no winner", () => {
@@ -66,7 +66,7 @@ describe("Tic-tac-toe", () => {
         ["", "", ""],
         ["", "", ""],
       ];
-      expect(ticTacToe({ gameBoard: empty })).toBe(false);
+      expect(checkWinner({ gameBoard: empty })).toBe(false);
     });
     it("not yet a tie", () => {
       const empty = [
@@ -74,7 +74,7 @@ describe("Tic-tac-toe", () => {
         ["", "O", ""],
         ["", "", "X"],
       ];
-      expect(ticTacToe({ gameBoard: empty })).toBe(false);
+      expect(checkWinner({ gameBoard: empty })).toBe(false);
     });
     it("a tie", () => {
       const tie = [
@@ -82,7 +82,7 @@ describe("Tic-tac-toe", () => {
         ["O", "O", "X"],
         ["X", "O", "X"],
       ];
-      expect(ticTacToe({ gameBoard: tie })).toBe(false);
+      expect(checkWinner({ gameBoard: tie })).toBe(false);
     });
   });
 });
