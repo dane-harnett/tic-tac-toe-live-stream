@@ -2,12 +2,16 @@ import { Given } from "cypress-cucumber-preprocessor/steps";
 
 import playerMarkers from "../../../src/constants/playerMarkers";
 
-Given("I start a new game", () => {
+Given("I load the game", () => {
   cy.visit("/");
 });
 
 When("the game has loaded", () => {
   cy.get("#game");
+});
+
+When("I start a new game", () => {
+  cy.get("#start-new-game").click();
 });
 
 Then("I see a blank game board", () => {

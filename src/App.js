@@ -34,6 +34,13 @@ function App() {
         <div id="winner">{state.context.currentPlayer} has won the game</div>
       )}
       {state.matches("tie") && <div id="tie">The game has ended in a tie</div>}
+      <button
+        id="start-new-game"
+        type="button"
+        onClick={() => send("START_NEW_GAME")}
+      >
+        Start new game
+      </button>
     </div>
   );
 }
