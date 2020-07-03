@@ -40,3 +40,16 @@ Feature: Play a game
     And "Player 1" plays their turn as "1:1"
     When "Player 2" plays their turn as "2:0"
     Then I see that "Player 2" has won the game
+
+  Scenario: Game ends in a tie
+    Given I start a new game
+    And "Player 1" plays their turn as "0:0"
+    And "Player 2" plays their turn as "1:0"
+    And "Player 1" plays their turn as "2:0"
+    And "Player 2" plays their turn as "2:1"
+    And "Player 1" plays their turn as "0:1"
+    And "Player 2" plays their turn as "0:2"
+    And "Player 1" plays their turn as "1:1"
+    And "Player 2" plays their turn as "2:2"
+    When "Player 1" plays their turn as "1:2"
+    Then I see that the game has ended in a tie

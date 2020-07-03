@@ -64,3 +64,7 @@ Then(/I see that "(.*)" has won the game/, (player) => {
   const winner = player === "Player 1" ? playerMarkers[0] : playerMarkers[1];
   cy.get(`#winner`).should("have.text", `${winner} has won the game`);
 });
+
+Then(/I see that the game has ended in a tie/, () => {
+  cy.get(`#tie`).should("have.text", `The game has ended in a tie`);
+});

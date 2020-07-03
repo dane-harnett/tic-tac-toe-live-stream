@@ -33,6 +33,7 @@ function App() {
       {state.matches("winner") && (
         <div id="winner">{state.context.currentPlayer} has won the game</div>
       )}
+      {state.matches("tie") && <div id="tie">The game has ended in a tie</div>}
     </div>
   );
 }

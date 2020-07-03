@@ -35,6 +35,10 @@ const gameMachine = Machine(
               target: "winner",
             },
             {
+              cond: "noRemainingValidMoves",
+              target: "tie",
+            },
+            {
               actions: "nextPlayer",
               target: "ready",
             },
@@ -81,6 +85,8 @@ const gameMachine = Machine(
         }
         return false;
       },
+      noRemainingValidMoves: ({ gameBoard }) =>
+        !gameBoard.some((row) => row.some((cell) => cell === "")),
     },
   }
 );
