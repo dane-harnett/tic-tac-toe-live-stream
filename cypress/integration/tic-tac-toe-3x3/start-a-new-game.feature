@@ -14,11 +14,11 @@ Feature: Starting a new game
     And I see that there are "2" players
     And I see that it is "Player 1" turn
 
-Scenario: Play the game again after another game has started
-  Given I load the app
-  And I start the game
-  And "Player 1" plays their turn as "2:2"
-  When I choose to play again
-  Then I see a blank 3x3 game board
-  And I see that there are "2" players
-  And I see that it is "Player 1" turn
+  Scenario: Play the game again after another game has started
+    Given I load the app
+    And I start the game
+    And "Player 1" plays their turn as "2:2"
+    When I choose to play again
+    Then I see a blank 3x3 game board
+    And I see that there are "2" players
+    And I see that it is "Player 1" turn

@@ -1,6 +1,6 @@
 Feature: Game rules
 
-Scenario: Can only play into an empty position
+  Scenario: Can only play into an empty position
     Given I load the app
     And I start the game
     And "Player 1" plays their turn as "2:2"
