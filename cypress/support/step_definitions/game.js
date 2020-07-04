@@ -14,20 +14,14 @@ When("I start a new game", () => {
   cy.get("#start-new-game").click();
 });
 
-Then("I see a blank game board", () => {
+Then("I see a blank {int}x{int} game board", (width, height) => {
   cy.get("#game").within(() => {
     cy.get("#game-board").within(() => {
-      cy.get("#cell-0-0").should("have.text", "");
-      cy.get("#cell-0-1").should("have.text", "");
-      cy.get("#cell-0-2").should("have.text", "");
-
-      cy.get("#cell-1-0").should("have.text", "");
-      cy.get("#cell-1-1").should("have.text", "");
-      cy.get("#cell-1-2").should("have.text", "");
-
-      cy.get("#cell-2-0").should("have.text", "");
-      cy.get("#cell-2-1").should("have.text", "");
-      cy.get("#cell-2-2").should("have.text", "");
+      for (let row = 0; row < height - 1; row++) {
+        for (let col = 0; col < width - 1; col++) {
+          cy.get(`#cell-${row}-${col}`).should("have.text", "");
+        }
+      }
     });
   });
 });

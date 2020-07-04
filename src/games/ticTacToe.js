@@ -21,23 +21,50 @@ export const updateGameBoard = ({ gameBoard, currentPlayer }, event) => {
 
 const isWinner = (a, b, c) => a !== "" && a === b && a === c;
 
-export const checkWinner = ({ gameBoard }) => {
-  if (
-    // columns
-    isWinner(gameBoard[0][0], gameBoard[1][0], gameBoard[2][0]) ||
-    isWinner(gameBoard[0][1], gameBoard[1][1], gameBoard[2][1]) ||
-    isWinner(gameBoard[0][2], gameBoard[1][2], gameBoard[2][2]) ||
-    // rows
-    isWinner(gameBoard[0][0], gameBoard[0][1], gameBoard[0][2]) ||
-    isWinner(gameBoard[1][0], gameBoard[1][1], gameBoard[1][2]) ||
-    isWinner(gameBoard[2][0], gameBoard[2][1], gameBoard[2][2]) ||
-    // diagonals
-    isWinner(gameBoard[0][0], gameBoard[1][1], gameBoard[2][2]) ||
-    isWinner(gameBoard[0][2], gameBoard[1][1], gameBoard[2][0])
-  ) {
-    return true;
-  }
+const getPositions = (startPosition) => {
+  return [
+    [
+      startPosition,
+      [startPosition[0], startPosition[1] + 1],
+      [startPosition[0], startPosition[1] + 2],
+    ], // row
+    [
+      startPosition,
+      [startPosition[0] + 1, startPosition[1]],
+      [startPosition[0] + 2, startPosition[1]],
+    ], // col
+    [
+      startPosition,
+      [startPosition[0] + 1, startPosition[1] + 1],
+      [startPosition[0] + 2, startPosition[1] + 2],
+    ], // left-to-right-diagonal
+    [
+      startPosition,
+      [startPosition[0] + 1, startPosition[1] - 1],
+      [startPosition[0] + 2, startPosition[1] - 2],
+    ], // right-to-left-diagonal
+  ];
+};
 
+export const checkWinner = ({ gameBoard }) => {
+  for (let rowIndex = 0; rowIndex < gameBoard.length; rowIndex++) {
+    const cols = gameBoard[rowIndex];
+    for (let colIndex = 0; colIndex < cols.length; colIndex++) {
+      const positions = getPositions([rowIndex, colIndex]);
+      for (let index = 0; index < positions.length; index++) {
+        const element = positions[index];
+        if (
+          isWinner(
+            gameBoard[element[0][0]]?.[element[0][1]],
+            gameBoard[element[1][0]]?.[element[1][1]],
+            gameBoard[element[2][0]]?.[element[2][1]]
+          )
+        ) {
+          return true;
+        }
+      }
+    }
+  }
   return false;
 };
 
