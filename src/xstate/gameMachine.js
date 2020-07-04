@@ -8,9 +8,7 @@ const gameMachine = Machine(
   {
     id: "game",
     initial: "config",
-    context: {
-      // ...currentGame.initialGameState,
-    },
+    context: {},
     states: {
       config: {
         on: {
