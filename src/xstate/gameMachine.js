@@ -7,53 +7,67 @@ const currentGame = ticTacToe;
 const gameMachine = Machine(
   {
     id: "game",
-    initial: "ready",
+    initial: "config",
     context: {
-      ...currentGame.initialGameState,
+      // ...currentGame.initialGameState,
     },
     states: {
-      ready: {
+      config: {
         on: {
-          PLAY: [
-            {
-              cond: "moveIsValid",
-              actions: "updateBoard",
-              target: "checkEndGame",
-            },
-          ],
+          START_GAME: {
+            actions: "startGame",
+            target: "playing",
+          },
         },
       },
-      checkEndGame: {
-        on: {
-          "": [
-            {
-              cond: "checkWinner",
-              target: "winner",
+      playing: {
+        initial: "ready",
+        states: {
+          ready: {
+            on: {
+              PLAY: [
+                {
+                  cond: "moveIsValid",
+                  actions: "updateBoard",
+                  target: "checkEndGame",
+                },
+              ],
             },
-            {
-              cond: "noRemainingValidMoves",
-              target: "tie",
+          },
+          checkEndGame: {
+            on: {
+              "": [
+                {
+                  cond: "checkWinner",
+                  target: "winner",
+                },
+                {
+                  cond: "noRemainingValidMoves",
+                  target: "tie",
+                },
+                {
+                  actions: "nextPlayer",
+                  target: "ready",
+                },
+              ],
             },
-            {
-              actions: "nextPlayer",
-              target: "ready",
-            },
-          ],
+          },
+          winner: {},
+          tie: {},
         },
-      },
-      winner: {},
-      tie: {},
-    },
-    on: {
-      START_NEW_GAME: {
-        actions: "startNewGame",
-        target: "ready",
+        on: {
+          PLAY_AGAIN: {
+            actions: "playGameAgain",
+            target: "playing",
+          },
+        },
       },
     },
   },
   {
     actions: {
-      startNewGame: assign(currentGame.initialGameState),
+      startGame: assign(currentGame.startGame),
+      playGameAgain: assign(currentGame.playGameAgain),
       updateBoard: assign({
         gameBoard: currentGame.updateGameBoard,
       }),

@@ -2,16 +2,35 @@ import { Given } from "cypress-cucumber-preprocessor/steps";
 
 import playerMarkers from "../../../src/constants/playerMarkers";
 
-Given("I load the game", () => {
+Given("I load the app", () => {
   cy.visit("/");
 });
 
-When("the game has loaded", () => {
-  cy.get("#game");
+When("the app has loaded", () => {
+  cy.get("#app");
 });
 
-When("I start a new game", () => {
-  cy.get("#start-new-game").click();
+Then("I see the game config screen", () => {
+  cy.get("#game-config");
+  cy.get("#game-board-size-width");
+  cy.get("#game-board-size-height");
+  cy.get("#start-game");
+});
+
+When("I enter {int} as the game board size width", (size) => {
+  cy.get("#game-board-size-width").type(`{selectall}{backspace}${size}`);
+});
+
+When("I enter {int} as the game board size height", (size) => {
+  cy.get("#game-board-size-height").type(`{selectall}{backspace}${size}`);
+});
+
+When("I start the game", () => {
+  cy.get("#start-game").click();
+});
+
+When("I choose to play again", () => {
+  cy.get("#play-again").click();
 });
 
 Then("I see a blank {int}x{int} game board", (width, height) => {
