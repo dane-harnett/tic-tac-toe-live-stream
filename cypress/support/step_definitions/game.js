@@ -2,32 +2,45 @@ import { Given } from "cypress-cucumber-preprocessor/steps";
 
 import playerMarkers from "../../../src/constants/playerMarkers";
 
-Given("I load the game", () => {
+Given("I load the app", () => {
   cy.visit("/");
 });
 
-When("the game has loaded", () => {
-  cy.get("#game");
+When("the app has loaded", () => {
+  cy.get("#app");
 });
 
-When("I start a new game", () => {
-  cy.get("#start-new-game").click();
+Then("I see the game config screen", () => {
+  cy.get("#game-config");
+  cy.get("#game-board-size-width");
+  cy.get("#game-board-size-height");
+  cy.get("#start-game");
 });
 
-Then("I see a blank game board", () => {
+When("I enter {int} as the game board size width", (size) => {
+  cy.get("#game-board-size-width").type(`{selectall}{backspace}${size}`);
+});
+
+When("I enter {int} as the game board size height", (size) => {
+  cy.get("#game-board-size-height").type(`{selectall}{backspace}${size}`);
+});
+
+When("I start the game", () => {
+  cy.get("#start-game").click();
+});
+
+When("I choose to play again", () => {
+  cy.get("#play-again").click();
+});
+
+Then("I see a blank {int}x{int} game board", (width, height) => {
   cy.get("#game").within(() => {
     cy.get("#game-board").within(() => {
-      cy.get("#cell-0-0").should("have.text", "");
-      cy.get("#cell-0-1").should("have.text", "");
-      cy.get("#cell-0-2").should("have.text", "");
-
-      cy.get("#cell-1-0").should("have.text", "");
-      cy.get("#cell-1-1").should("have.text", "");
-      cy.get("#cell-1-2").should("have.text", "");
-
-      cy.get("#cell-2-0").should("have.text", "");
-      cy.get("#cell-2-1").should("have.text", "");
-      cy.get("#cell-2-2").should("have.text", "");
+      for (let row = 0; row < height - 1; row++) {
+        for (let col = 0; col < width - 1; col++) {
+          cy.get(`#cell-${row}-${col}`).should("have.text", "");
+        }
+      }
     });
   });
 });
