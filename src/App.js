@@ -6,11 +6,38 @@ import "./App.css";
 
 function App() {
   const [state, send] = useMachine(gameMachine);
+  const [game, setGame] = useState("ticTacToe");
+  const [numberOfPlayers, setNumberOfPlayers] = useState(2);
   const [gameBoardSize, setGameBoardSize] = useState([3, 3]);
+  const currentPlayers = playerMarkers.slice(0, numberOfPlayers);
   return (
     <div id="app">
       {state.matches("config") && (
         <div id="game-config">
+          <label>
+            Choose game:
+            <select
+              onChange={(evt) => {
+                setGame(evt.target.value);
+              }}
+            >
+              <option value="ticTacToe">Tic-tac-toe</option>
+              <option value="connect4">Connect4</option>
+            </select>
+          </label>
+          <br />
+          <label>
+            Choose number of players:
+            <input
+              type="text"
+              id="number-of-players"
+              onChange={(evt) => {
+                setNumberOfPlayers(parseInt(evt.target.value, 10) || "");
+              }}
+              value={numberOfPlayers}
+            />
+          </label>
+          <br />
           <label>
             Choose game board size:
             <input
@@ -41,7 +68,9 @@ function App() {
           <button
             id="start-game"
             type="button"
-            onClick={() => send("START_GAME", { gameBoardSize })}
+            onClick={() =>
+              send("START_GAME", { game, gameBoardSize, numberOfPlayers })
+            }
           >
             Start game
           </button>
@@ -70,15 +99,17 @@ function App() {
               });
             })}
           </div>
-          <div id="player1">
-            {state.context.currentPlayer === playerMarkers[0] && "> "}Player 1
-          </div>
-          <div id="player2">
-            {state.context.currentPlayer === playerMarkers[1] && "> "}Player 2
-          </div>
+          {currentPlayers.map((player, playerIndex) => {
+            return (
+              <div id={`player${playerIndex + 1}`}>
+                {state.context.currentPlayerIndex === playerIndex && "> "}
+                Player {playerIndex + 1}
+              </div>
+            );
+          })}
           {state.matches("playing.winner") && (
             <div id="winner">
-              {state.context.currentPlayer} has won the game
+              {playerMarkers[state.context.currentPlayerIndex]} has won the game
             </div>
           )}
           {state.matches("playing.tie") && (

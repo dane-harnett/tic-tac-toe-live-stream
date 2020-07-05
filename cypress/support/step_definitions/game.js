@@ -1,4 +1,4 @@
-import { Given } from "cypress-cucumber-preprocessor/steps";
+import { Given, Then, When } from "cypress-cucumber-preprocessor/steps";
 
 import playerMarkers from "../../../src/constants/playerMarkers";
 
@@ -12,9 +12,14 @@ When("the app has loaded", () => {
 
 Then("I see the game config screen", () => {
   cy.get("#game-config");
+  cy.get("#number-of-players");
   cy.get("#game-board-size-width");
   cy.get("#game-board-size-height");
   cy.get("#start-game");
+});
+
+When("I enter {int} as the number of players", (numberOfPlayers) => {
+  cy.get("#number-of-players").type(`{selectall}{backspace}${numberOfPlayers}`);
 });
 
 When("I enter {int} as the game board size width", (size) => {
@@ -45,10 +50,18 @@ Then("I see a blank {int}x{int} game board", (width, height) => {
   });
 });
 
-Then('I see that there are "2" players', () => {
+Then('I see that there are "{int}" players', (numberOfPlayers) => {
   cy.get("#game").within(() => {
-    cy.get("#player1").should("contain", "Player 1");
-    cy.get("#player2").should("contain", "Player 2");
+    for (
+      let playerNumber = 1;
+      playerNumber <= numberOfPlayers;
+      playerNumber++
+    ) {
+      cy.get(`#player${playerNumber}`).should(
+        "contain",
+        `Player ${playerNumber}`
+      );
+    }
   });
 });
 
@@ -62,6 +75,14 @@ Then('I see that it is "Player 1" turn', () => {
 Then('I see that it is "Player 2" turn', () => {
   cy.get("#game").within(() => {
     cy.get("#player2").should("have.text", "> Player 2");
+    cy.get("#player1").should("have.text", "Player 1");
+  });
+});
+
+Then('I see that it is "Player 3" turn', () => {
+  cy.get("#game").within(() => {
+    cy.get("#player3").should("have.text", "> Player 3");
+    cy.get("#player2").should("have.text", "Player 2");
     cy.get("#player1").should("have.text", "Player 1");
   });
 });

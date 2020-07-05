@@ -1,8 +1,6 @@
 import { assign, Machine } from "xstate";
-import playerMarkers from "../constants/playerMarkers";
-import ticTacToe from "../games/ticTacToe";
 
-const currentGame = ticTacToe;
+import games from "../games";
 
 const gameMachine = Machine(
   {
@@ -13,7 +11,7 @@ const gameMachine = Machine(
       config: {
         on: {
           START_GAME: {
-            actions: "startGame",
+            actions: ["setCurrentGame", "startGame"],
             target: "playing",
           },
         },
@@ -64,21 +62,30 @@ const gameMachine = Machine(
   },
   {
     actions: {
-      startGame: assign(currentGame.startGame),
-      playGameAgain: assign(currentGame.playGameAgain),
+      setCurrentGame: assign({
+        currentGame: (context, event) => games[event.game],
+      }),
+      startGame: assign((context, event) =>
+        games[event.game].startGame(context, event)
+      ),
+      playGameAgain: assign((context, event) =>
+        context.currentGame.playGameAgain(context, event)
+      ),
       updateBoard: assign({
-        gameBoard: currentGame.updateGameBoard,
+        gameBoard: (context, event) =>
+          context.currentGame.updateGameBoard(context, event),
       }),
       nextPlayer: assign({
-        currentPlayer: ({ currentPlayer }) =>
-          currentPlayer === playerMarkers[0]
-            ? playerMarkers[1]
-            : playerMarkers[0],
+        currentPlayerIndex: ({ currentPlayerIndex, numberOfPlayers }) =>
+          currentPlayerIndex === numberOfPlayers - 1
+            ? 0
+            : currentPlayerIndex + 1,
       }),
     },
     guards: {
       moveIsValid: ({ gameBoard }, { row, col }) => gameBoard[row][col] === "",
-      checkWinner: currentGame.checkWinner,
+      checkWinner: (context, event) =>
+        context.currentGame.checkWinner(context, event),
       noRemainingValidMoves: ({ gameBoard }) =>
         !gameBoard.some((row) => row.some((cell) => cell === "")),
     },
