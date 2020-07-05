@@ -70,10 +70,10 @@ const gameMachine = Machine(
         gameBoard: currentGame.updateGameBoard,
       }),
       nextPlayer: assign({
-        currentPlayer: ({ currentPlayer }) =>
-          currentPlayer === playerMarkers[0]
-            ? playerMarkers[1]
-            : playerMarkers[0],
+        currentPlayerIndex: ({ currentPlayerIndex, numberOfPlayers }) =>
+          currentPlayerIndex === numberOfPlayers - 1
+            ? 0
+            : currentPlayerIndex + 1,
       }),
     },
     guards: {

@@ -1,26 +1,27 @@
 import playerMarkers from "../constants/playerMarkers";
 
 export const startGame = {
-  currentPlayer: playerMarkers[0],
+  currentPlayerIndex: 0,
   gameBoard: (context, { gameBoardSize }) => {
     return Array.from(new Array(gameBoardSize[1])).fill(
       Array.from(new Array(gameBoardSize[0])).fill("")
     );
   },
+  numberOfPlayers: (context, { numberOfPlayers }) => numberOfPlayers,
 };
 
 export const playGameAgain = {
-  currentPlayer: playerMarkers[0],
+  currentPlayerIndex: 0,
   gameBoard: ({ gameBoard }) => {
     return gameBoard.map((row) => row.map(() => ""));
   },
 };
 
-export const updateGameBoard = ({ gameBoard, currentPlayer }, event) => {
+export const updateGameBoard = ({ gameBoard, currentPlayerIndex }, event) => {
   return gameBoard.map((row, rowIndex) =>
     event.row === rowIndex
       ? row.map((col, colIndex) =>
-          event.col === colIndex ? currentPlayer : col
+          event.col === colIndex ? playerMarkers[currentPlayerIndex] : col
         )
       : row
   );
