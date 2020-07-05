@@ -6,6 +6,7 @@ import "./App.css";
 
 function App() {
   const [state, send] = useMachine(gameMachine);
+  const [game, setGame] = useState("ticTacToe");
   const [numberOfPlayers, setNumberOfPlayers] = useState(2);
   const [gameBoardSize, setGameBoardSize] = useState([3, 3]);
   const currentPlayers = playerMarkers.slice(0, numberOfPlayers);
@@ -13,6 +14,18 @@ function App() {
     <div id="app">
       {state.matches("config") && (
         <div id="game-config">
+          <label>
+            Choose game:
+            <select
+              onChange={(evt) => {
+                setGame(evt.target.value);
+              }}
+            >
+              <option value="ticTacToe">Tic-tac-toe</option>
+              <option value="connect4">Connect4</option>
+            </select>
+          </label>
+          <br />
           <label>
             Choose number of players:
             <input
@@ -56,7 +69,7 @@ function App() {
             id="start-game"
             type="button"
             onClick={() =>
-              send("START_GAME", { gameBoardSize, numberOfPlayers })
+              send("START_GAME", { game, gameBoardSize, numberOfPlayers })
             }
           >
             Start game
